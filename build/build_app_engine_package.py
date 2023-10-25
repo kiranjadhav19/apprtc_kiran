@@ -20,15 +20,24 @@ src_path     Path to the source code root directory.
 dest_path    Path to the root directory to push/deploy GAE from."""
 
 
-def call_cmd_and_return_output_lines(cmd):
-  try:
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-    output = process.communicate()[0]
-    return output.split('\n')
-  except OSError as e:
-    print(str(e))
-    return []
+# def call_cmd_and_return_output_lines(cmd):
+#   try:
+#     process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+#     output = process.communicate()[0]
+#     return output.split('\n')
+#   except OSError as e:
+#     print(str(e))
+#     return []
 
+def call_cmd_and_return_output_lines(cmd):
+    try:
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        output = stdout.decode('utf-8')  # Decode bytes to string
+        return output.split('\n')
+    except OSError as e:
+        print(str(e))
+        return []
 
 def build_version_info_file(dest_path):
   """Build the version info JSON file."""
